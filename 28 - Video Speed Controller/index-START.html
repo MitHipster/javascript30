@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Video Speed Scrubber</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Video Speed Scrubber</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="wrapper">
+			<video
+				class="flex"
+				width="765"
+				height="430"
+				src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"
+				loop
+				controls
+			></video>
+			<div class="speed">
+				<div class="speed-bar">1×</div>
+			</div>
+		</div>
 
-  <div class="wrapper">
-    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
-    <div class="speed">
-      <div class="speed-bar">1×</div>
-    </div>
-  </div>
+		<script>
+			const speed = document.querySelector('.speed'),
+				bar = document.querySelector('.speed-bar'),
+				video = document.querySelector('.flex'),
+				initialSpeed = 1,
+				minSpeed = 0.5,
+				maxSpeed = 3;
 
-<script>
-</script>
-</body>
+			bar.style.height = (100 / maxSpeed).toFixed(2) + '%';
+			bar.textContent = initialSpeed.toFixed(1) + 'x';
+			// Uses a regular function instead of arrow function so 'this' equals speed
+			speed.addEventListener('mousemove', function(e) {
+				// debugger;
+				const y = e.pageY - this.offsetTop,
+					percent = y / this.offsetHeight,
+					minHeight = (1 / maxSpeed) * minSpeed,
+					height = percent < minHeight ? minHeight : percent,
+					playbackRate = height * maxSpeed;
+
+				bar.style.height = height * 100 + '%';
+				bar.textContent = playbackRate.toFixed(1) + 'x';
+
+				video.playbackRate = playbackRate.toFixed(1);
+			});
+		</script>
+	</body>
 </html>
